@@ -1,2 +1,5 @@
 # ignore the typescript files when publishing to npm
 src/
+
+# ignore tsconfig.json
+tsconfig.json

@@ -1,6 +1,6 @@
 {
   "name": "floyd-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "CLI for floyd",
   "main": "index.js",
   "scripts": {

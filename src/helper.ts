@@ -23,6 +23,7 @@ export async function createProject(projectObject: Project) {
     }
 
     let absolutePath = path.resolve(projectObject.path);
+    absolutePath = path.join(absolutePath, projectObject.name);
 
     await fs.mkdir(absolutePath, (err) => {
     	// no error encountered
