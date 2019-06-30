@@ -1,5 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
+import { exec } from 'child_process';
+
+import chalk from 'chalk';
 
 import { Project } from './types';
 
@@ -12,6 +16,21 @@ export function checkInputs(name: string, path: string): Promise<Project> {
     });       
 }
 
-export function createProject(projectObject: Project) {
-    console.log(path.resolve(projectObject.path));
+export async function createProject(projectObject: Project) {
+    // convert to absolute path if `~` is present
+    if (projectObject.path[0] == '~') {
+    	projectObject.path = path.join(<string>process.env.HOME, projectObject.path.slice(1));
+    }
+
+    let absolutePath = path.resolve(projectObject.path);
+
+    await fs.mkdir(absolutePath, (err) => {
+    	// no error encountered
+    	if (err) {
+    		console.error(chalk.red(err.message));
+    	}
+    });
+
+    let command = `git clone https://github.com/faraazahmad/floyd.git ${absolutePath}`;
+    exec(command);
 }
