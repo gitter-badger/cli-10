@@ -13,11 +13,11 @@ export function checkInputs(name: string, path: string): Promise<Project> {
             reject(new Error("arguments cannot be empty"));
         }
         resolve(<Project>{ name, path });
-    });       
+    });
 }
 
 export async function createProject(projectObject: Project) {
-    // convert to absolute path if `~` is present
+    // replace '~' with /home/<username>
     if (projectObject.path[0] == '~') {
     	projectObject.path = path.join(<string>process.env.HOME, projectObject.path.slice(1));
     }

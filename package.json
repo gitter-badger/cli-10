@@ -1,11 +1,11 @@
 {
   "name": "floyd-cli",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "CLI for floyd",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc && sh src/build.sh"
   },
   "repository": {
     "type": "git",
@@ -19,12 +19,14 @@
   },
   "homepage": "https://github.com/faraazahmad/floyd-cli#readme",
   "dependencies": {
-    "@types/node": "^12.0.10",
     "chalk": "^2.4.2",
-    "typescript": "^3.5.2",
     "yargs": "^13.2.4"
   },
   "bin": {
-    "floyd": "./build/cli.js"
+    "floyd": "build/cli.js"
+  },
+  "devDependencies": {
+    "@types/node": "^12.0.10",
+    "typescript": "^3.5.2"
   }
 }

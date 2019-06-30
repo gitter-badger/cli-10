@@ -1,0 +1,2 @@
+# ignore the typescript files when publishing to npm
+src/
