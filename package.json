@@ -1,0 +1,29 @@
+{
+  "name": "floyd-cli",
+  "version": "1.0.0",
+  "description": "CLI for floyd",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faraazahmad/floyd-cli.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/faraazahmad/floyd-cli/issues"
+  },
+  "homepage": "https://github.com/faraazahmad/floyd-cli#readme",
+  "dependencies": {
+    "@types/node": "^12.0.10",
+    "typescript": "^3.5.2",
+    "yargs": "^13.2.4"
+  },
+  "bin": {
+    "floyd": "./build/cli.js"
+  }
+}
