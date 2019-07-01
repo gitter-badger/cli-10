@@ -1,9 +1,8 @@
-import { mkdir } from 'fs';
 import { join, resolve } from 'path';
 import { exec } from 'child_process';
 
 import chalk from 'chalk';
-import { CommandModule, CommandBuilder, Arguments } from 'yargs';
+import { CommandModule, Arguments, CommandBuilder, Argv } from 'yargs';
 
 export default class Create implements CommandModule {
     public command: string;
@@ -14,18 +13,20 @@ export default class Create implements CommandModule {
     constructor() {
         this.command = "create <name> <path>";
         this.describe = "Create a Floyd project";
-        this.builder = {
-            name: {
+
+        this.builder = (yargs: Argv) => {
+            return yargs
+            .positional('name', {
                 alias: 'n',
+                describe: 'name of your project',
                 type: 'string',
-                description: 'name of your project',
-            },
-            path: {
+            })
+            .positional('path', {
                 alias: 'p',
+                describe: 'path of the directory to create your project in',
                 type: 'string',
-                description: 'path of directory to create your project folder',
-            },
-        };
+            });
+        }
 
         this.handler = async (args: Arguments) => {
             let name: string = args.name as string;
@@ -36,18 +37,17 @@ export default class Create implements CommandModule {
                 path = join(<string>process.env.HOME, path.slice(1));
             }
 
+            // get the absolute path and add project path to it
             let absolutePath = resolve(path);
             absolutePath = join(absolutePath, name);
 
-            await mkdir(absolutePath, (err) => {
-                // no error encountered
+            let command = `git clone https://github.com/floyd-framework/app.git ${absolutePath}`;
+            exec(command, (err) => {
+                // error encountered while executing command
                 if (err) {
                     console.error(chalk.red(err.message));
                 }
             });
-
-            let command = `git clone https://github.com/faraazahmad/floyd.git ${absolutePath}`;
-            exec(command);
         };
     }   
 };
