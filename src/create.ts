@@ -25,6 +25,11 @@ export default class Create implements CommandModule {
                 alias: 'p',
                 describe: 'path of the directory to create your project in',
                 type: 'string',
+            })
+            .option('force-clone', {
+                alias: 'f',
+                describe: 'Forcefully download app code from source',
+                type: 'boolean',
             });
         }
 
