@@ -1,6 +1,6 @@
 import { join, resolve } from 'path';
 import { exec } from 'child_process';
-import { existsSync, mkdir } from 'fs';
+import { rmdir, readdirSync } from 'fs';
 
 import chalk from 'chalk';
 import moment from 'moment';
@@ -28,7 +28,7 @@ export default class Create implements CommandModule {
             })
             .option('force-clone', {
                 alias: 'f',
-                describe: 'Forcefully download app code from source',
+                describe: 'Forcefully clone latest app code from source',
                 type: 'boolean',
             });
         }
@@ -36,34 +36,30 @@ export default class Create implements CommandModule {
         this.handler = async (args: Arguments) => {
             let name = args.name as string;
             let path = args.path as string;
+            let forceClone = args.forceClone as boolean;
 
-            // check if ~/.floyd/app exists
-            let appExists = existsSync(join(`${process.env.HOME}`, '.floyd', 'app'));
-            
-            if (appExists) {
-                this.copyToPath(name, path);
+            if (forceClone) {
+                this.clone();
             } else {
-                // if not, create ~/.floyd/app and clone app into it
-                await mkdir(join(`${process.env.HOME}`, '.floyd'),'', (err) => {
-                    if (err) {
-                        console.error(chalk.red(err.message));
-                        process.exit(1);
-                    }
-                });
-                await this.clone();
-                this.copyToPath(name, path);
+                let appDir = join(`${process.env.HOME}`, '.floyd', 'app');
+
+                // clone app from github if last clone was done 15+ days ago
+                let lastCloneDate = readdirSync(appDir)[0];
+                let timeAgoString = moment(lastCloneDate, "dd_mm_yyyy").fromNow();
+                let timeAgoArray = timeAgoString.split(" ");
+
+                if (timeAgoArray[0] > "15" && timeAgoArray[1] == "days") {
+                    this.clone();
+                    // delete old version of app
+                    rmdir(join(appDir, lastCloneDate), (err) => {
+                        if (err) {
+                            console.error(chalk.red(err.message));
+                            process.exit(1);
+                        }
+                    });
+                }
             }
-
-
-
-
-
-
-
-
-
-
-            
+            this.copyToPath(name, path);
         };
     }
     
@@ -76,6 +72,7 @@ export default class Create implements CommandModule {
             // error encountered while executing command
             if (err) {
                 console.error(chalk.red(err.message));
+                process.exit(1);
             }
         });
     }
