@@ -37,14 +37,13 @@ export default class Create implements CommandModule {
             let name = args.name as string;
             let path = args.path as string;
 
-            // check if ~/.floyd/ exists
-            let floydExists = existsSync(join(`${process.env.HOME}`, '.floyd'));
-            let appExists: boolean;
-
-            if (floydExists) {
-                // check if ~/.floyd/app/ exists
-                appExists = existsSync(join(`${process.env.HOME}`, '.floyd', 'app'));
+            // check if ~/.floyd/app exists
+            let appExists = existsSync(join(`${process.env.HOME}`, '.floyd', 'app'));
+            
+            if (appExists) {
+                this.copyToPath(name, path);
             } else {
+                // if not, create ~/.floyd/app and clone app into it
                 await mkdir(join(`${process.env.HOME}`, '.floyd'),'', (err) => {
                     if (err) {
                         console.error(chalk.red(err.message));
@@ -54,7 +53,6 @@ export default class Create implements CommandModule {
                 await this.clone();
                 this.copyToPath(name, path);
             }
-            // if not, create ~/.floyd and clone app into it
 
 
 
