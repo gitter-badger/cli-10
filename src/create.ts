@@ -1,9 +1,9 @@
 import { join, resolve } from 'path';
 import { exec } from 'child_process';
-import { existsSync } from 'fs';
-
+import { existsSync, mkdir } from 'fs';
 
 import chalk from 'chalk';
+import moment from 'moment';
 import { CommandModule, Arguments, CommandBuilder, Argv } from 'yargs';
 
 export default class Create implements CommandModule {
@@ -34,17 +34,25 @@ export default class Create implements CommandModule {
         }
 
         this.handler = async (args: Arguments) => {
-            /* 
-                check if ~/.floyd/ exists
-                !! Callback version used since fs.promises.access is still experimental as of July 2nd, 2019 !!
-            */
+            let name = args.name as string;
+            let path = args.path as string;
+
+            // check if ~/.floyd/ exists
             let floydExists = existsSync(join(`${process.env.HOME}`, '.floyd'));
             let appExists: boolean;
 
             if (floydExists) {
+                // check if ~/.floyd/app/ exists
                 appExists = existsSync(join(`${process.env.HOME}`, '.floyd', 'app'));
             } else {
-
+                await mkdir(join(`${process.env.HOME}`, '.floyd'),'', (err) => {
+                    if (err) {
+                        console.error(chalk.red(err.message));
+                        process.exit(1);
+                    }
+                });
+                await this.clone();
+                this.copyToPath(name, path);
             }
             // if not, create ~/.floyd and clone app into it
 
@@ -55,22 +63,15 @@ export default class Create implements CommandModule {
 
 
 
-            let name: string = args.name as string;
-            let path: string = args.path as string;
+
 
             
         };
     }
     
-    private clone(name: string, path: string) {
-        // replace '~' with /home/<username>
-        if (path[0] == '~') {
-            path = join(<string>process.env.HOME, path.slice(1));
-        }
-
-        // get the absolute path and add project path to it
-        let absolutePath = resolve(path);
-        absolutePath = join(absolutePath, name);
+    private clone() {
+        let date = moment().format('DDMMYYYY');
+        let absolutePath = join(`${process.env.HOME}`, '.floyd', 'app', date);
 
         let command = `git clone https://github.com/floyd-framework/app.git ${absolutePath}`;
         exec(command, (err) => {
@@ -81,7 +82,14 @@ export default class Create implements CommandModule {
         });
     }
 
-    private copyToPath(path: string) {
+    private copyToPath(name: string, path: string) {
+        // replace '~' with /home/<username>
+        if (path[0] == '~') {
+            path = join(<string>process.env.HOME, path.slice(1));
+        }
 
+        // get the absolute path and add project path to it
+        let absolutePath = resolve(path);
+        absolutePath = join(absolutePath, name);
     }
 };
