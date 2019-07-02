@@ -11,7 +11,7 @@ export default class Create implements CommandModule {
     public handler: (args: Arguments) => void;
 
     constructor() {
-        this.command = "create <name> <path>";
+        this.command = "create <name> <path> [options]";
         this.describe = "Create a Floyd project";
 
         this.builder = (yargs: Argv) => {
