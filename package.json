@@ -1,12 +1,12 @@
 {
   "name": "floyd-cli",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "CLI for floyd",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && sh src/build.sh",
-    "postinstall": ""
+    "postinstall": "sh postinstall.sh"
   },
   "repository": {
     "type": "git",
