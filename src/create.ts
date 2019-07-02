@@ -17,12 +17,10 @@ export default class Create implements CommandModule {
         this.builder = (yargs: Argv) => {
             return yargs
             .positional('name', {
-                alias: 'n',
                 describe: 'name of your project',
                 type: 'string',
             })
             .positional('path', {
-                alias: 'p',
                 describe: 'path of the directory to create your project in',
                 type: 'string',
             })
