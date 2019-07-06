@@ -57,7 +57,7 @@ export default class Add implements CommandModule {
         }
     }
 
-    private async createComponent(name: string) {
+    private async createComponent(componentName: string) {
         // copy component folder to app/components/
         const copyCommand = `cp -r ${join(__filename, '..', '..', 'component')} .`;
         await exec(copyCommand, (err) => {
@@ -67,14 +67,14 @@ export default class Add implements CommandModule {
             }
         });
 
+        // rename folder to component name
         const basePath = join(__dirname, 'app', 'components');
-        const renameCommand = `mv ${join(basePath, 'component')} ${join(basePath, name)}`;
+        const renameCommand = `mv ${join(basePath, 'component')} ${join(basePath, componentName)}`;
         exec(renameCommand, (err) => {
             if (err) {
                 chalk.red(err.message);
                 process.exit(1);
             }
         });
-        // rename folder to component name
     }
 };
