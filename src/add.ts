@@ -42,8 +42,18 @@ export default class Add implements CommandModule {
                 }
             });
 
+            // create the component
+            this.createComponent(componentName);
+
             // finally inform user
             console.log(chalk.green(`Successfully created component ${componentName}.`));
         }
+    }
+
+    private createComponent(name: string) {
+        // copy component folder to app/components/
+
+
+        // rename folder to component name
     }
 };
