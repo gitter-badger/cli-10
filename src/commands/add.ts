@@ -8,6 +8,7 @@ import { join } from 'path';
 import chalk from 'chalk';
 
 import { isFloydProject } from '../helpers';
+import { exec } from 'child_process';
 
 export default class Add implements CommandModule {
     public command: string;
@@ -56,9 +57,24 @@ export default class Add implements CommandModule {
         }
     }
 
-    private createComponent(name: string) {
+    private async createComponent(name: string) {
         // copy component folder to app/components/
+        const copyCommand = `cp -r ${join(__filename, '..', '..', 'component')} .`;
+        await exec(copyCommand, (err) => {
+            if (err) {
+                chalk.red(err.message);
+                process.exit(1);
+            }
+        });
 
+        const basePath = join(__dirname, 'app', 'components');
+        const renameCommand = `mv ${join(basePath, 'component')} ${join(basePath, name)}`;
+        exec(renameCommand, (err) => {
+            if (err) {
+                chalk.red(err.message);
+                process.exit(1);
+            }
+        });
         // rename folder to component name
     }
 };
