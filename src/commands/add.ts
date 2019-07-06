@@ -7,6 +7,8 @@ import { writeFile } from 'fs';
 import { join } from 'path';
 import chalk from 'chalk';
 
+import { isFloydProject } from '../helpers';
+
 export default class Add implements CommandModule {
     public command: string;
     public describe: string;
@@ -25,8 +27,12 @@ export default class Add implements CommandModule {
                 });
         }
 
-        this.handler = async (args: Arguments) => {
-            // TODO: check if pwd is a Floyd app
+        this.handler = (args: Arguments) => {
+            // check if pwd is a Floyd app
+            if (!isFloydProject) {
+                chalk.red('Current folder is not a Floyd project');
+                process.exit(1);
+            }
 
             // add component name to app.config.json
             let componentName = args.name as string;
@@ -52,7 +58,6 @@ export default class Add implements CommandModule {
 
     private createComponent(name: string) {
         // copy component folder to app/components/
-
 
         // rename folder to component name
     }
