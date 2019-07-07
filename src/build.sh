@@ -7,3 +7,6 @@ shebang='#!/usr/bin/env node'
 echo "$shebang\n$(cat build/cli.js)" > build/cli.js
 
 chmod +x build/cli.js
+
+# copy dist folder to build/
+cp dist/ build/ -r

@@ -1,3 +1,7 @@
+/*
+    CLI command to create a new floyd project folder
+*/
+
 import { join, resolve } from 'path';
 import { exec } from 'child_process';
 import { rmdir, readdirSync } from 'fs';
