@@ -1,5 +1,8 @@
 /*
-    CLI command to add new component to floyd project folder
+    CLI command to add new component to floyd project folder.
+    Steps that will take place:
+    1. Add component name to app/app.config.json
+    2. copy component folder to app and rename it to component name
 */
 
 import { CommandModule, Arguments, CommandBuilder, Argv } from 'yargs';
