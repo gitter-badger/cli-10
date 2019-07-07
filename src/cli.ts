@@ -3,11 +3,11 @@ import Add from './commands/add';
 
 import yargs from 'yargs';
 
-yargs
-.usage('Usage: $0 <command> [options]')
-.command(new Create)
-.command(new Add)
-.help('h')
-.alias('h', 'help')
-.epilog('MIT licensed')
-.argv;
+const argv = yargs
+    .usage('Usage: $0 <command> [options]')
+    .command(new Create)
+    .command(new Add)
+    .help('h')
+    .alias('h', 'help')
+    .epilog('MIT licensed')
+    .argv;

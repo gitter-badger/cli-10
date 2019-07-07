@@ -67,7 +67,7 @@ export default class Create implements CommandModule {
             }
 
             this.copyToPath(name, path);
-            chalk.green(`Project ${name} successfully created.`);
+            console.log(chalk.green(`Project ${name} successfully created.`));
         };
     }
     
@@ -75,6 +75,7 @@ export default class Create implements CommandModule {
         let date = moment().format('DD_MM_YYYY');
         let absolutePath = join(`${process.env.HOME}`, '.floyd', 'app', date);
 
+        // TODO: add check for already existing repo folder
         let command = `git clone https://github.com/floyd-framework/app.git ${absolutePath}`;
         chalk.gray('Updating local app repository...');
         exec(command, (err) => {
@@ -95,5 +96,24 @@ export default class Create implements CommandModule {
         // get the absolute path and add project path to it
         let absolutePath = resolve(path);
         absolutePath = join(absolutePath, name);
+
+        // copy the repo to the destination folder
+        let date = moment().format('DD_MM_YYYY');
+        let repoPath = join(`${process.env.HOME}`, '.floyd', 'app', date);
+
+        let copyCommand = `cp -r ${repoPath} ${absolutePath}`;
+        exec(copyCommand, (err) => {
+            if (err) {
+                console.error(chalk.red(err.message));
+            }
+        });
+
+        // delete .git folder from project folder
+        let deleteCommand = `rm -rf ${join(absolutePath, '.git')}`;
+        exec(deleteCommand, (err) => {
+            if (err) {
+                console.error(chalk.red(err.message));
+            }
+        });
     }
 };
