@@ -43,35 +43,40 @@ export default class Create implements CommandModule {
             let forceClone = args.forceClone as boolean;
 
             if (forceClone) {
-                this.clone();
+                await this.clone();
             } else {
                 let appDir = join(`${process.env.HOME}`, '.floyd', 'app');
 
                 // clone app from github if last clone was done 15+ days ago
                 let lastCloneDate = readdirSync(appDir)[0];
-                let timeAgoString = moment(lastCloneDate, "dd_mm_yyyy").fromNow();
+                let timeAgoString = moment(lastCloneDate, "DD_MM_YYYY").fromNow();
                 let timeAgoArray = timeAgoString.split(" ");
 
                 if (timeAgoArray[0] > "15" && timeAgoArray[1] == "days") {
-                    this.clone();
-                    // delete old version of app
+                    await this.clone();
+                    
+                    // delete old version of cloned app repository
                     rmdir(join(appDir, lastCloneDate), (err) => {
                         if (err) {
                             console.error(chalk.red(err.message));
                             process.exit(1);
                         }
                     });
+                    // TODO: remove .git folder from created app directory
                 }
             }
+
             this.copyToPath(name, path);
+            chalk.green(`Project ${name} successfully created.`);
         };
     }
     
     private clone() {
-        let date = moment().format('DDMMYYYY');
+        let date = moment().format('DD_MM_YYYY');
         let absolutePath = join(`${process.env.HOME}`, '.floyd', 'app', date);
 
         let command = `git clone https://github.com/floyd-framework/app.git ${absolutePath}`;
+        chalk.gray('Updating local app repository...');
         exec(command, (err) => {
             // error encountered while executing command
             if (err) {
