@@ -43,9 +43,14 @@ export default class Create implements CommandModule {
             let forceClone = args.forceClone as boolean;
 
             if (forceClone) {
+                exec(`rm -rf ${join(<string>process.env.HOME, '.floyd', 'app')}`, (err) => {
+                    if (err) {
+                        console.log(chalk.red(err.message));
+                    }
+                })
                 await this.clone();
             } else {
-                let appDir = join(`${process.env.HOME}`, '.floyd', 'app');
+                let appDir = join(<string>process.env.HOME, '.floyd', 'app');
 
                 // clone app from github if last clone was done 15+ days ago
                 let lastCloneDate = readdirSync(appDir)[0];
