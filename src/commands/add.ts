@@ -60,7 +60,7 @@ export default class Add implements CommandModule {
 
     private async createComponent(componentName: string) {
         // copy component folder to app/components/
-        let sourcePath = join(__filename, '..', '..', 'dist', 'component');
+        let sourcePath = join(__filename, '..', '..', 'dist', 'component', '*');
         let destinationPath = resolve(join('.', 'app', 'components', 'cat'));
 
         // create destination path
