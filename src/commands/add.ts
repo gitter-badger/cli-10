@@ -71,7 +71,7 @@ export default class Add implements CommandModule {
         });
 
         // rename folder to component name
-        const basePath = join(__dirname, 'app', 'components');
+        const basePath = join('.', 'app', 'components');
         const renameCommand = `mv ${join(basePath, 'component')} ${join(basePath, componentName)}`;
         exec(renameCommand, (err) => {
             if (err) {
