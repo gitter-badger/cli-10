@@ -34,6 +34,7 @@ floyd create hello-world ~/playground
 will create your project in `~/playground/hello-world/`
 
 ## Project structure
+Floyd has a simple and recognisable project structure so when you pick up someone else's Floyd app to maintain or contribute to, you feel right at home.
 ```
 .
 ├── app
@@ -54,7 +55,11 @@ will create your project in `~/playground/hello-world/`
 ├── README.md
 └── tsconfig.json
 ```
-The app folder will contain all the code for your backend. `app.config.json` will contain all your configuration options, like database URL, name of all the components, etc. `schema.graphql` will contain the global types of your schema, i.e. types needed by more than one component's schema. Similarly, `resolvers.ts` will contain all the global resolvers that you might need, just make sure none (neither global nor component specific) of your resolver names collide, since all of them will be made available in the same scope.
+The app folder will contain all the code for your backend. 
+* `app.config.json` will contain all your configuration options, like database URL, name of all the components, etc. 
+* The `components` folder will contain all your components, each in its separate folder by name.
+* `schema.graphql` will contain the global types of your schema, i.e. types needed by more than one component's schema. 
+* Similarly, `resolvers.ts` will contain all the global resolvers that you might need, just make sure none (neither global nor component specific) of your resolver names collide, since all of them will be made available in the same scope.
 
 ## Contributing
 
