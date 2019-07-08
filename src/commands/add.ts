@@ -7,7 +7,7 @@
 
 import { CommandModule, Arguments, CommandBuilder, Argv } from 'yargs';
 import { writeFile } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import chalk from 'chalk';
 
 import { isFloydProject } from '../helpers';
@@ -40,7 +40,7 @@ export default class Add implements CommandModule {
 
             // add component name to app.config.json
             let componentName = args.name as string;
-            let fileName = join('.', 'app.config.json');
+            let fileName = resolve(join('.', 'app', 'app.config.json'));
             
             let config = require(fileName);
             config.components.push(componentName);
@@ -54,15 +54,12 @@ export default class Add implements CommandModule {
 
             // create the component
             this.createComponent(componentName);
-
-            // finally inform user
-            console.log(chalk.green(`Successfully created component ${componentName}.`));
         }
     }
 
     private async createComponent(componentName: string) {
         // copy component folder to app/components/
-        const copyCommand = `cp -r ${join(__filename, '..', '..', 'component')} .`;
+        const copyCommand = `cp -r ${join(__filename, '..', '..', 'dist', 'component')} .`;
         await exec(copyCommand, (err) => {
             if (err) {
                 console.log(chalk.red(err.message));
@@ -71,7 +68,7 @@ export default class Add implements CommandModule {
         });
 
         // rename folder to component name
-        const basePath = join('.', 'app', 'components');
+        const basePath = resolve(join('.', 'app', 'components'));
         const renameCommand = `mv ${join(basePath, 'component')} ${join(basePath, componentName)}`;
         exec(renameCommand, (err) => {
             if (err) {
@@ -79,5 +76,8 @@ export default class Add implements CommandModule {
                 process.exit(1);
             }
         });
+
+        // finally inform user
+        console.log(chalk.green(`Successfully created component ${componentName}.`));
     }
 };
