@@ -6,7 +6,7 @@
 */
 
 import { CommandModule, Arguments, CommandBuilder, Argv } from 'yargs';
-import { writeFile } from 'fs';
+import { writeFile, mkdirSync } from 'fs';
 import { join, resolve } from 'path';
 import chalk from 'chalk';
 
@@ -31,16 +31,20 @@ export default class Add implements CommandModule {
                 });
         }
 
-        this.handler = (args: Arguments) => {
+        this.handler = async (args: Arguments) => {
             // check if pwd is a Floyd app
             if (!isFloydProject) {
                 console.log(chalk.red('Current folder is not a Floyd project'));
                 process.exit(1);
             }
 
-            // add component name to app.config.json
             let componentName = args.name as string;
             let fileName = resolve(join('.', 'app', 'app.config.json'));
+
+            // create the component
+            await this.createComponent(componentName);
+            
+            // add component name to app.config.json
             
             let config = require(fileName);
             config.components.push(componentName);
@@ -51,26 +55,22 @@ export default class Add implements CommandModule {
                     process.exit(1);
                 }
             });
-
-            // create the component
-            this.createComponent(componentName);
         }
     }
 
     private async createComponent(componentName: string) {
         // copy component folder to app/components/
-        const copyCommand = `cp -r ${join(__filename, '..', '..', 'dist', 'component')} .`;
-        await exec(copyCommand, (err) => {
-            if (err) {
-                console.log(chalk.red(err.message));
-                process.exit(1);
-            }
+        let sourcePath = join(__filename, '..', '..', 'dist', 'component');
+        let destinationPath = resolve(join('.', 'app', 'components', 'cat'));
+
+        // create destination path
+        mkdirSync(destinationPath, {
+            recursive: true,
         });
 
-        // rename folder to component name
-        const basePath = resolve(join('.', 'app', 'components'));
-        const renameCommand = `mv ${join(basePath, 'component')} ${join(basePath, componentName)}`;
-        exec(renameCommand, (err) => {
+        // copy files to path
+        const copyCommand = `cp -r ${sourcePath} ${destinationPath}`;
+        await exec(copyCommand, (err) => {
             if (err) {
                 console.log(chalk.red(err.message));
                 process.exit(1);
