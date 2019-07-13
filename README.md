@@ -17,12 +17,18 @@ One of the advantages of GraphQL over REST is you can know beforehand exactly wh
 
 ## Getting started
 
-Install the Floyd CLI with npm:
+### Install the Floyd CLI with npm:
+
 ```bash
 npm install -g floyd-cli
 ```
+Or using Yarn
+```bash
+yarn global add floyd-cli
+```
 
-Create your project in any directory you want using the `create` command:
+### Create your project in any directory you want using the `create` command:
+
 ```bash
 floyd create <name> <path>
 ```
@@ -33,7 +39,16 @@ floyd create hello-world ~/playground
 ```
 will create your project in `~/playground/hello-world/`
 
+### Add a component to your project using the `add` command:
+
+Make sure you are inside your project's directory, then to add a component named `cat`:
+```bash
+floyd add cat
+```
+It will create a folder cat in your components folder as shown in the project structure below.
+
 ## Project structure
+
 Floyd has a simple and recognisable project structure so when you pick up someone else's Floyd app to maintain or contribute to, you feel right at home.
 ```
 .
