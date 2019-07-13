@@ -41,20 +41,31 @@ export default class Add implements CommandModule {
             let componentName = args.name as string;
             let fileName = resolve(join('.', 'app', 'app.config.json'));
 
-            // create the component
-            await this.createComponent(componentName);
-            
             // add component name to app.config.json
-            
             let config = require(fileName);
-            config.components.push(componentName);
+            // exit with error if component of same name exists
+            if (config.components[componentName]) {
+                console.error(chalk.red(`Component named ${componentName} already exists`));
+                process.exit(1);
+            }
+            // if no such component exists, add to app.config.json
+            config.components[componentName] = componentName;
 
+            // append to schema.graphql
+            this.appendToSchema(componentName);
+            
             writeFile(fileName, JSON.stringify(config, null, 2), (err) => {
                 if (err) {
                     console.log(chalk.red(err.message));
                     process.exit(1);
                 }
             });
+            
+            // create the component
+            await this.createComponent(componentName);
+
+            // finally inform user
+            console.log(chalk.green(`Successfully created component ${componentName}.`));
         }
     }
 
@@ -76,8 +87,18 @@ export default class Add implements CommandModule {
                 process.exit(1);
             }
         });
+    }
 
-        // finally inform user
-        console.log(chalk.green(`Successfully created component ${componentName}.`));
+    private async appendToSchema(component: string) {
+        let schemaFileName = resolve(join('.', 'app', 'schema.graphql'));
+        let importString = `import * from ./components/${component}/schema.graphql`;
+
+        let appendCommand = `sed -i "1s;^;${importString}\n;" ${schemaFileName}`;
+        exec(appendCommand, (err) => {
+            if (err) {
+                console.error(chalk.red(err.message));
+                process.exit(1);
+            }
+        });
     }
 };
