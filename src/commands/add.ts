@@ -91,9 +91,9 @@ export default class Add implements CommandModule {
 
     private async appendToSchema(component: string) {
         let schemaFileName = resolve(join('.', 'app', 'schema.graphql'));
-        let importString = `import * from ./components/${component}/schema.graphql`;
+        let importString = `import * from './components/${component}/schema.graphql';`;
 
-        let appendCommand = `sed -i "1s;^;${importString}\n;" ${schemaFileName}`;
+        let appendCommand = `sed -i "1s;^;${importString}\n" ${schemaFileName}`;
         exec(appendCommand, (err) => {
             if (err) {
                 console.error(chalk.red(err.message));
