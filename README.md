@@ -1,4 +1,7 @@
 # Floyd
+
+[![Join the chat at https://gitter.im/floyd-framework/cli](https://badges.gitter.im/floyd-framework/cli.svg)](https://gitter.im/floyd-framework/cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 The famework for building GraphQL backends, with first-class support for Typescript. You won't need to spend time trying to set up the GraphQL backend, Floyd will do it for you.
 
 ## Why
